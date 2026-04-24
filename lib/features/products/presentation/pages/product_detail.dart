@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetail extends StatefulWidget {
   final int id;
-
   const ProductDetail({super.key, required this.id});
 
   @override
