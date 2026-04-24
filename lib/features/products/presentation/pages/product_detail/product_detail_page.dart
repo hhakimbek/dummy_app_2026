@@ -1,7 +1,6 @@
 import 'package:dummy_app_2026/core/theme/app_theme.dart';
-import 'package:dummy_app_2026/features/products/presentation/bloc/product_list/product_bloc.dart' hide ProductBloc, ProductState;
-import 'package:dummy_app_2026/features/products/presentation/pages/widgets/info_tile.dart';
-import 'package:dummy_app_2026/features/products/presentation/pages/widgets/pill_widget.dart';
+import 'package:dummy_app_2026/features/products/presentation/pages/product_detail/widgets/info_tile.dart';
+import 'package:dummy_app_2026/features/products/presentation/pages/product_detail/widgets/pill_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,7 +31,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final productTheme = theme.extension<ProductThemeExtension>();
 
     return Scaffold(
       body: BlocBuilder<ProductBloc, ProductState>(
@@ -127,7 +125,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               "\$${discountedPrice.toStringAsFixed(2)}",
                               style: theme.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: productTheme?.priceColor ?? colorScheme.primary,
+                                color: colorScheme.primary,
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -143,7 +141,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               "-${product.discountPercentage.toStringAsFixed(0)}%",
                               style: theme.textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: productTheme?.discountColor ?? colorScheme.error,
+                                color: colorScheme.error,
                               ),
                             ),
                           ],
