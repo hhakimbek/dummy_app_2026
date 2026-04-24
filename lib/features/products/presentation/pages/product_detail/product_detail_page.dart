@@ -1,9 +1,11 @@
 import 'package:dummy_app_2026/core/theme/app_theme.dart';
-import 'package:dummy_app_2026/features/products/presentation/bloc/product_bloc.dart';
+import 'package:dummy_app_2026/features/products/presentation/bloc/product_list/product_bloc.dart' hide ProductBloc, ProductState;
 import 'package:dummy_app_2026/features/products/presentation/pages/widgets/info_tile.dart';
 import 'package:dummy_app_2026/features/products/presentation/pages/widgets/pill_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../bloc/product_detail/product_bloc.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int id;

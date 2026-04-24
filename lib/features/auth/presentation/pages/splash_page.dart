@@ -1,4 +1,4 @@
-import 'package:dummy_app_2026/features/products/presentation/pages/product_detail_page.dart';
+import 'package:dummy_app_2026/features/products/presentation/pages/product_detail/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection.dart';

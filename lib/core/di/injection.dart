@@ -4,9 +4,10 @@ import 'package:dummy_app_2026/features/products/data/repositories/product_repos
 import 'package:dummy_app_2026/features/products/domain/repositories/product_repository.dart';
 import 'package:dummy_app_2026/features/products/domain/usecases/get_products_usecase.dart';
 import 'package:dummy_app_2026/features/products/domain/usecases/get_single_product_usecase.dart';
-import 'package:dummy_app_2026/features/products/presentation/bloc/product_bloc.dart';
+import 'package:dummy_app_2026/features/products/presentation/bloc/product_list/product_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/products/presentation/bloc/product_detail/product_bloc.dart';
 import '../network/dio_client.dart';
 import '../storage/hive_service.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
@@ -49,7 +50,12 @@ Future<void> configureDependencies() async {
   getIt.registerFactory<ProductBloc>(
     () => ProductBloc(
       singleProductUsecase: getIt<SingleProductUsecase>(),
-      productsUsecase: getIt<ProductsUsecase>(),
+    ),
+  );
+  // ---------- Products ----------
+  getIt.registerFactory<ProductsBloc>(
+        () => ProductsBloc(
+          productsUsecase: getIt<ProductsUsecase>(),
     ),
   );
 }

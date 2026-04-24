@@ -14,9 +14,3 @@ class GetSingleProductRequest extends ProductEvent {
   @override
   List<Object?> get props => [id];
 }
-
-class GetProductsRequest extends ProductEvent {
-  const GetProductsRequest();
-  @override
-  List<Object?> get props => [];
-}
