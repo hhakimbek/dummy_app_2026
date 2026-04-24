@@ -21,4 +21,14 @@ class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, List<Product>>> getProducts() async {
+    try {
+      final products = await remoteDataSource.getProducts();
+      return Right(products);
+    } on ServerException catch(e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
 }

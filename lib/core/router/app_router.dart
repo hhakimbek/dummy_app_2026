@@ -1,4 +1,5 @@
-import 'package:dummy_app_2026/features/products/presentation/pages/product_detail.dart';
+import 'package:dummy_app_2026/features/products/presentation/pages/product_detail_page.dart';
+import 'package:dummy_app_2026/features/products/presentation/pages/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -8,7 +9,7 @@ class AppRouter {
   static const String splash = '/';
   static const String login = '/login';
   static const String home = '/home';
-  static const String productDetail = '/products/:id';
+  static const String productDetail = '/products';
   static const String cart = '/cart';
   static const String profile = '/profile';
   static const String settings = '/settings';
@@ -26,7 +27,7 @@ class AppRouter {
       ),
       GoRoute(
         path: home,
-        builder: (context, state) => const Scaffold(body: Center(child: Text('Home'))),
+        builder: (context, state) => ProductsPage(),
       ),
       GoRoute(
         path: cart,
@@ -44,8 +45,11 @@ class AppRouter {
       ),
       GoRoute(
         path: '/products/:id',
-        builder: (_, state) => ProductDetail(id: int.parse(state.pathParameters['id']!))
-      ),
+        builder: (_, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return ProductDetailPage(id: int.parse(state.pathParameters['id']!));
+        }
+      )
     ],
   );
 }

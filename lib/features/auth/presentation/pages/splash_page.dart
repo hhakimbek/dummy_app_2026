@@ -1,4 +1,4 @@
-import 'package:dummy_app_2026/features/products/presentation/pages/product_detail.dart';
+import 'package:dummy_app_2026/features/products/presentation/pages/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection.dart';
@@ -23,8 +23,8 @@ class _SplashPageState extends State<SplashPage> {
     final isLoggedIn = getIt<HiveService>().isLoggedIn;
     Future.delayed(const Duration(seconds: 2), () {
       if (!mounted) return;
-      // context.go(isLoggedIn ? AppRouter.home : AppRouter.login);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProductDetail(id: 1),));
+      context.go(isLoggedIn ? AppRouter.home : AppRouter.login);
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProductDetailPage(id: 1),));
     });
   }
 

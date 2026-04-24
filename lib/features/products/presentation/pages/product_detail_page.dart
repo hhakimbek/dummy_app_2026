@@ -5,15 +5,15 @@ import 'package:dummy_app_2026/features/products/presentation/pages/widgets/pill
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductDetail extends StatefulWidget {
+class ProductDetailPage extends StatefulWidget {
   final int id;
-  const ProductDetail({super.key, required this.id});
+  const ProductDetailPage({super.key, required this.id});
 
   @override
-  State<ProductDetail> createState() => _ProductDetailState();
+  State<ProductDetailPage> createState() => _ProductDetailPageState();
 }
 
-class _ProductDetailState extends State<ProductDetail> {
+class _ProductDetailPageState extends State<ProductDetailPage> {
   int _currentImage = 0;
 
   @override

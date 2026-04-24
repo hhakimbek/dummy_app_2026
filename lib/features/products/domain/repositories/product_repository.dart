@@ -4,4 +4,5 @@ import 'package:dummy_app_2026/features/products/domain/entities/product.dart';
 
 abstract class ProductRepository {
   Future<Either<Failure,Product>> getProduct({required int id});
+  Future<Either<Failure,List<Product>>> getProducts();
 }

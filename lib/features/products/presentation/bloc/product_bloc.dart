@@ -1,4 +1,5 @@
 import 'package:dummy_app_2026/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:dummy_app_2026/features/products/domain/usecases/get_products_usecase.dart';
 import 'package:dummy_app_2026/features/products/domain/usecases/get_single_product_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -11,9 +12,11 @@ part 'product_state.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   final SingleProductUsecase singleProductUsecase;
+  final ProductsUsecase productsUsecase;
 
-  ProductBloc({required this.singleProductUsecase}) : super(ProductInitial()) {
+  ProductBloc({required this.singleProductUsecase, required this.productsUsecase}) : super(ProductInitial()) {
     on<GetSingleProductRequest>(_getProduct);
+    on<GetProductsRequest>(_getProducts);
   }
 
   void _getProduct(GetSingleProductRequest event, Emitter<ProductState> emit) async {
@@ -23,6 +26,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       (l) => emit(ProductError(l.message)),
       (r) => emit(ProductLoaded(r)),
     );
+  }
 
+  void _getProducts(GetProductsRequest event, Emitter<ProductState> emit) async {
+    emit(ProductLoading());
+    final result = await productsUsecase();
+    result.fold(
+          (l) => emit(ProductError(l.message)),
+          (r) => emit(ProductsLoaded(r)),
+    );
   }
 }

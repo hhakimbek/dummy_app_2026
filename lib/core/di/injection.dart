@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:dummy_app_2026/features/products/data/datasources/product_remote_datasource.dart';
 import 'package:dummy_app_2026/features/products/data/repositories/product_repository_impl.dart';
 import 'package:dummy_app_2026/features/products/domain/repositories/product_repository.dart';
+import 'package:dummy_app_2026/features/products/domain/usecases/get_products_usecase.dart';
 import 'package:dummy_app_2026/features/products/domain/usecases/get_single_product_usecase.dart';
 import 'package:dummy_app_2026/features/products/presentation/bloc/product_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -26,9 +27,7 @@ Future<void> configureDependencies() async {
     AuthRemoteDataSourceImpl(getIt<Dio>()),
   );
   getIt.registerSingleton<AuthRepository>(
-    AuthRepositoryImpl(
-      remoteDataSource: getIt<AuthRemoteDataSource>(),
-    ),
+    AuthRepositoryImpl(remoteDataSource: getIt<AuthRemoteDataSource>()),
   );
   getIt.registerSingleton<LoginUseCase>(LoginUseCase(getIt<AuthRepository>()));
   getIt.registerFactory<AuthBloc>(
@@ -39,12 +38,18 @@ Future<void> configureDependencies() async {
     ProductRemoteDataSourceImpl(getIt<Dio>()),
   );
   getIt.registerSingleton<ProductRepository>(
-    ProductRepositoryImpl(
-      remoteDataSource: getIt<ProductRemoteDataSource>(),
-    ),
+    ProductRepositoryImpl(remoteDataSource: getIt<ProductRemoteDataSource>()),
   );
-  getIt.registerSingleton<SingleProductUsecase>(SingleProductUsecase(getIt<ProductRepository>()));
+  getIt.registerSingleton<SingleProductUsecase>(
+    SingleProductUsecase(getIt<ProductRepository>()),
+  );
+  getIt.registerSingleton<ProductsUsecase>(
+    ProductsUsecase(getIt<ProductRepository>()),
+  );
   getIt.registerFactory<ProductBloc>(
-        () => ProductBloc(singleProductUsecase: getIt<SingleProductUsecase>()),
+    () => ProductBloc(
+      singleProductUsecase: getIt<SingleProductUsecase>(),
+      productsUsecase: getIt<ProductsUsecase>(),
+    ),
   );
 }
