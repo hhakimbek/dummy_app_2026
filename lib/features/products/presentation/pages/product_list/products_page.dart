@@ -13,6 +13,7 @@ class ProductsPage extends StatefulWidget {
 
 class _ProductsPageState extends State<ProductsPage> {
 
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -20,16 +21,74 @@ class _ProductsPageState extends State<ProductsPage> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _onGetProducts() async {
     context.read<ProductsBloc>().add(GetProductsRequest());
+  }
+
+  void _onSearchChanged(String query) {
+    if (query.trim().isEmpty) {
+      context.read<ProductsBloc>().add(const GetProductsRequest());
+    } else {
+      context.read<ProductsBloc>().add(
+        SearchProductsRequested(query.trim()),
+      );
+    }
   }
 
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dummy app"),
+        title: const Text('Products'),
+        scrolledUnderElevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: () =>
+                context.read<ProductsBloc>().add(const GetProductsRequest()),
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _onSearchChanged,
+              decoration: InputDecoration(
+                hintText: 'Search products...',
+                prefixIcon: const Icon(Icons.search_rounded),
+                suffixIcon: ListenableBuilder(
+                  listenable: _searchController,
+                  builder: (context, _) => _searchController.text.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.clear_rounded),
+                    onPressed: () {
+                      _searchController.clear();
+                      _onGetProducts();
+                    },
+                  )
+                      : const SizedBox.shrink(),
+                ),
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: colorScheme.surfaceContainerHighest,
+              ),
+            ),
+          ),
+        ),
       ),
       body: BlocListener<ProductsBloc, ProductsState>(
         listener: (context, state) {

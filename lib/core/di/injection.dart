@@ -7,6 +7,7 @@ import 'package:dummy_app_2026/features/products/domain/usecases/get_single_prod
 import 'package:dummy_app_2026/features/products/presentation/bloc/product_list/product_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/products/domain/usecases/search_products_usecase.dart';
 import '../../features/products/presentation/bloc/product_detail/product_bloc.dart';
 import '../network/dio_client.dart';
 import '../storage/hive_service.dart';
@@ -47,6 +48,9 @@ Future<void> configureDependencies() async {
   getIt.registerSingleton<ProductsUsecase>(
     ProductsUsecase(getIt<ProductRepository>()),
   );
+  getIt.registerSingleton<SearchProductsUsecase>(
+    SearchProductsUsecase(getIt<ProductRepository>()),
+  );
   getIt.registerFactory<ProductBloc>(
     () => ProductBloc(
       singleProductUsecase: getIt<SingleProductUsecase>(),
@@ -55,7 +59,7 @@ Future<void> configureDependencies() async {
   // ---------- Products ----------
   getIt.registerFactory<ProductsBloc>(
         () => ProductsBloc(
-          productsUsecase: getIt<ProductsUsecase>(),
+          productsUsecase: getIt<ProductsUsecase>(), searchProductsUsecase: getIt<SearchProductsUsecase>(),
     ),
   );
 }

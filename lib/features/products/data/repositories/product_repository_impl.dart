@@ -31,4 +31,14 @@ class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, List<Product>>> searchProducts({required String query}) async {
+    try {
+      final products = await remoteDataSource.searchProducts(query: query);
+      return Right(products);
+    } on ServerException catch(e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
 }
