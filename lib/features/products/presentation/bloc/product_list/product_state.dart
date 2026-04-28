@@ -20,9 +20,9 @@ class ProductsLoaded extends ProductsState {
   List<Object?> get props => [products];
 }
 
-class ProductError extends ProductsState {
+class ProductsError extends ProductsState {
   final String message;
-  const ProductError(this.message);
+  const ProductsError(this.message);
 
   @override
   List<Object?> get props => [message];

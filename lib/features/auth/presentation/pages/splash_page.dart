@@ -23,7 +23,8 @@ class _SplashPageState extends State<SplashPage> {
     final isLoggedIn = getIt<HiveService>().isLoggedIn;
     Future.delayed(const Duration(seconds: 2), () {
       if (!mounted) return;
-      context.go(isLoggedIn ? AppRouter.home : AppRouter.login);
+      context.go(AppRouter.home);
+      // context.go(isLoggedIn ? AppRouter.home : AppRouter.login);
       // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProductDetailPage(id: 1),));
     });
   }

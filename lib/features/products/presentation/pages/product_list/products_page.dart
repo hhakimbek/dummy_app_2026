@@ -156,7 +156,7 @@ class _ProductsPageState extends State<ProductsPage> {
                 ),
               );
             }
-            else if (state is ProductError) {
+            else if (state is ProductsError) {
               return Center(child: Text(state.message));
             } else if(state is ProductsLoading) {
               return const Center(child: CircularProgressIndicator());

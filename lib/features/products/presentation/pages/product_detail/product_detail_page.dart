@@ -240,7 +240,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ],
             );
           }
-
+          else if (state is ProductError) {
+            return Center(child: Text(state.message));
+          } else if(state is ProductLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
           return const Center(child: CircularProgressIndicator());
         },
       ),
