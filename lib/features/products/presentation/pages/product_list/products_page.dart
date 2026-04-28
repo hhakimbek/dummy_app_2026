@@ -91,44 +91,39 @@ class _ProductsPageState extends State<ProductsPage> {
           ),
         ),
       ),
-      body: BlocListener<ProductsBloc, ProductsState>(
-        listener: (context, state) {
-          print(state);
-        },
-        child: BlocBuilder<ProductsBloc, ProductsState>(
-          builder: (context, state) {
-            if (state is ProductsLoaded) {
-              final products = state.products; // List<Product>
+      body: BlocBuilder<ProductsBloc, ProductsState>(
+        builder: (context, state) {
+          if (state is ProductsLoaded) {
+            final products = state.products; // List<Product>
 
-              if (products.isEmpty) {
-                return const Center(child: Text("Mahsulotlar topilmadi"));
-              }
+            if (products.isEmpty) {
+              return const Center(child: Text("Mahsulotlar topilmadi"));
+            }
 
-              return RefreshIndicator(
-                onRefresh: () async {
-                  _onGetProducts();
+            return RefreshIndicator(
+              onRefresh: () async {
+                _onGetProducts();
+              },
+              child: ListView.separated(
+                padding: const EdgeInsets.all(12),
+                itemCount: products.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  final discountedPrice = product.price * (1 - product.discountPercentage / 100);
+
+                  return ProductCard(product: product, discountedPrice: discountedPrice);
                 },
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: products.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    final discountedPrice = product.price * (1 - product.discountPercentage / 100);
-
-                    return ProductCard(product: product, discountedPrice: discountedPrice);
-                  },
-                ),
-              );
-            }
-            else if (state is ProductsError) {
-              return Center(child: Text(state.message));
-            } else if(state is ProductsLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return SizedBox.shrink();
-          },
-        ),
+              ),
+            );
+          }
+          else if (state is ProductsError) {
+            return Center(child: Text(state.message));
+          } else if(state is ProductsLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return SizedBox.shrink();
+        },
       ),
     );
   }
