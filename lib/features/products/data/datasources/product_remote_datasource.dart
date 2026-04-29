@@ -4,8 +4,8 @@ import 'package:dummy_app_2026/features/products/data/models/product_model.dart'
 
 abstract class ProductRemoteDataSource {
   Future<ProductModel> getProduct({required int id});
-  Future<List<ProductModel>> getProducts();
-  Future<List<ProductModel>> searchProducts({required String query});
+  Future<List<ProductModel>> getProducts({String? sortBy,String? order});
+  Future<List<ProductModel>> searchProducts({required String query, String? sortBy,String? order});
 }
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
@@ -24,9 +24,12 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<List<ProductModel>> getProducts() async {
+  Future<List<ProductModel>> getProducts({String? sortBy,String? order}) async {
     try {
-      final response = await dio.get('/products/');
+      final queryParameter = <String,dynamic>{};
+      if(sortBy!=null) queryParameter['sortBy'] = sortBy;
+      if(order!=null) queryParameter['order'] = order;
+      final response = await dio.get('/products/',queryParameters: queryParameter);
       final list = response.data['products'] as List;
       return list.map((e) => ProductModel.fromJson(e),).toList();
     } on DioException catch (e) {
@@ -35,9 +38,12 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<List<ProductModel>> searchProducts({required String query}) async {
+  Future<List<ProductModel>> searchProducts({required String query, String? sortBy,String? order}) async {
     try {
-      final response = await dio.get('/products/search',queryParameters: {"q":query});
+      final queryParameter = <String,dynamic>{"q":query};
+      if(sortBy!=null) queryParameter['sortBy'] = sortBy;
+      if(order!=null) queryParameter['order'] = order;
+      final response = await dio.get('/products/search',queryParameters: queryParameter);
       final list = response.data['products'] as List;
       return list.map((e) => ProductModel.fromJson(e),).toList();
     } on DioException catch (e) {

@@ -9,7 +9,7 @@ class SearchProductsUsecase {
 
   SearchProductsUsecase(this.productRepository);
 
-  Future<Either<Failure,List<Product>>> call({required String query}) {
-    return productRepository.searchProducts(query: query);
+  Future<Either<Failure,List<Product>>> call({required String query, String? sortBy,String? order}) {
+    return productRepository.searchProducts(query: query,sortBy: sortBy,order: order);
   }
 }

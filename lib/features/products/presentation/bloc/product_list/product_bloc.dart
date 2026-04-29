@@ -19,7 +19,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   void _getProducts(GetProductsRequest event, Emitter<ProductsState> emit) async {
     emit(ProductsLoading());
-    final result = await productsUsecase();
+    final result = await productsUsecase(sortBy: event.sortBy,order: event.order);
     result.fold(
           (l) => emit(ProductsError(l.message)),
           (r) => emit(ProductsLoaded(r)),
@@ -29,7 +29,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   void _searchProducts(SearchProductsRequested event,Emitter<ProductsState> emit) async {
     emit(ProductsLoading());
-    final result = await searchProductsUsecase.call(query: event.query);
+    final result = await searchProductsUsecase.call(query: event.query,order: event.order,sortBy: event.sortBy);
     result.fold(
           (failure) => emit(ProductsError(failure.message)),
           (response) => emit(ProductsLoaded(response)),

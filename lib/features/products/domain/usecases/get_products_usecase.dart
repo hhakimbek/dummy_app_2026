@@ -8,7 +8,7 @@ class ProductsUsecase {
 
   ProductsUsecase(this.repository);
 
-  Future<Either<Failure, List<Product>>> call(){
-    return repository.getProducts();
+  Future<Either<Failure, List<Product>>> call({String? sortBy,String? order}){
+    return repository.getProducts(order: order,sortBy: sortBy);
   }
 }

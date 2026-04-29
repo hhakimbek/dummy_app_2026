@@ -1,9 +1,11 @@
 import 'package:dummy_app_2026/core/router/app_router.dart';
 import 'package:dummy_app_2026/features/products/presentation/bloc/product_list/product_bloc.dart';
 import 'package:dummy_app_2026/features/products/presentation/pages/product_list/widgets/product_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/adapters.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -15,6 +17,9 @@ class ProductsPage extends StatefulWidget {
 class _ProductsPageState extends State<ProductsPage> {
 
   final TextEditingController _searchController = TextEditingController();
+  String? _activeSortBy;
+  String? _activeOrder;
+
 
   @override
   void initState() {
@@ -29,15 +34,17 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   Future<void> _onGetProducts() async {
-    context.read<ProductsBloc>().add(GetProductsRequest());
+    print("_activeOrder: $_activeOrder, _activeSortBy: $_activeSortBy");
+    context.read<ProductsBloc>().add(GetProductsRequest(sortBy: _activeSortBy,order: _activeOrder));
   }
 
   void _onSearchChanged(String query) {
+    print("_activeOrder: $_activeOrder, _activeSortBy: $_activeSortBy");
     if (query.trim().isEmpty) {
-      context.read<ProductsBloc>().add(const GetProductsRequest());
+      context.read<ProductsBloc>().add(GetProductsRequest(sortBy: _activeSortBy,order: _activeOrder));
     } else {
       context.read<ProductsBloc>().add(
-        SearchProductsRequested(query.trim()),
+        SearchProductsRequested(query: query.trim(),sortBy: _activeSortBy,order: _activeOrder),
       );
     }
   }
@@ -51,11 +58,80 @@ class _ProductsPageState extends State<ProductsPage> {
         title: const Text('Products'),
         scrolledUnderElevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            onPressed: () =>
-                context.read<ProductsBloc>().add(const GetProductsRequest()),
-          ),
+          PopupMenuButton<SortType>(
+            icon: const Icon(Icons.sort),
+            onSelected: (SortType value) {
+              switch (value) {
+                case SortType.az:
+                  _activeOrder = "asc";
+                  _activeSortBy = "title";
+                  break;
+                case SortType.za:
+                  _activeOrder = "desc";
+                  _activeSortBy = "title";
+                  break;
+                case SortType.priceHighToLow:
+                  _activeOrder = "desc";
+                  _activeSortBy = "price";
+                  break;
+                case SortType.priceLowToHigh:
+                  _activeOrder = "asc";
+                  _activeSortBy = "price";
+                  break;
+                case SortType.ratingHighToLow:
+                  _activeOrder = "desc";
+                  _activeSortBy = "rating";
+                  break;
+                case SortType.ratingLowToHigh:
+                  _activeOrder = "asc";
+                  _activeSortBy = "rating";
+                  break;
+                case SortType.def:
+                  _activeSortBy=null;
+                  _activeOrder=null;
+                  break;
+              }
+              final query = _searchController.text.trim();
+              context.read<ProductsBloc>().add(
+                query.isEmpty
+                    ? GetProductsRequest(sortBy: _activeSortBy, order: _activeOrder)
+                    : SearchProductsRequested(query: query, sortBy: _activeSortBy, order: _activeOrder),
+              );
+
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: SortType.def,
+                child: Text("Default"),
+              ),
+              const PopupMenuItem(
+                value: SortType.az,
+                child: Text("Alphabet: A → Z"),
+              ),
+              const PopupMenuItem(
+                value: SortType.za,
+                child: Text("Alphabet: Z → A"),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem(
+                value: SortType.priceHighToLow,
+                child: Text("Price: High → Low"),
+              ),
+              const PopupMenuItem(
+                value: SortType.priceLowToHigh,
+                child: Text("Price: Low → High"),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem(
+                value: SortType.ratingHighToLow,
+                child: Text("Rating: High → Low"),
+              ),
+              const PopupMenuItem(
+                value: SortType.ratingLowToHigh,
+                child: Text("Rating: Low → High"),
+              ),
+            ],
+          )
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
@@ -63,7 +139,7 @@ class _ProductsPageState extends State<ProductsPage> {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: TextField(
               controller: _searchController,
-              onChanged: _onSearchChanged,
+              onChanged: (value) => _onSearchChanged(value,),
               decoration: InputDecoration(
                 hintText: 'Search products...',
                 prefixIcon: const Icon(Icons.search_rounded),
@@ -127,4 +203,13 @@ class _ProductsPageState extends State<ProductsPage> {
       ),
     );
   }
+}
+enum SortType {
+  az,
+  za,
+  priceHighToLow,
+  priceLowToHigh,
+  ratingHighToLow,
+  ratingLowToHigh,
+  def
 }

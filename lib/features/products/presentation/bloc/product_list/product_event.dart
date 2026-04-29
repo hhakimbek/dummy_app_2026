@@ -9,14 +9,29 @@ abstract class ProductsEvent extends Equatable{
 
 
 class GetProductsRequest extends ProductsEvent {
-  const GetProductsRequest();
+  final String? order;
+  final String? sortBy;
+  const GetProductsRequest({this.order, this.sortBy});
   @override
   List<Object?> get props => [];
 }
 
 class SearchProductsRequested extends ProductsEvent {
   final String query;
-  const SearchProductsRequested(this.query);
+  final String? order;
+  final String? sortBy;
+  const SearchProductsRequested({required this.query, this.order, this.sortBy});
+
+  @override
+  List<Object> get props => [query];
+}
+
+
+class SortProductsRequested extends ProductsEvent {
+  final String query;
+  final String? order;
+  final String? sortBy;
+  const SortProductsRequested({required this.query,this.order, this.sortBy});
 
   @override
   List<Object> get props => [query];
