@@ -1,12 +1,18 @@
 import 'package:dio/dio.dart';
+import 'package:dummy_app_2026/features/products/data/datasources/category_remote_datasource.dart';
 import 'package:dummy_app_2026/features/products/data/datasources/product_remote_datasource.dart';
 import 'package:dummy_app_2026/features/products/data/repositories/product_repository_impl.dart';
 import 'package:dummy_app_2026/features/products/domain/repositories/product_repository.dart';
+import 'package:dummy_app_2026/features/products/domain/usecases/get_categories_usecase.dart';
+import 'package:dummy_app_2026/features/products/domain/usecases/get_product_categories_usecase.dart';
 import 'package:dummy_app_2026/features/products/domain/usecases/get_products_usecase.dart';
 import 'package:dummy_app_2026/features/products/domain/usecases/get_single_product_usecase.dart';
+import 'package:dummy_app_2026/features/products/presentation/bloc/category/category_bloc.dart';
 import 'package:dummy_app_2026/features/products/presentation/bloc/product_list/product_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/products/data/repositories/category_repository_impl.dart';
+import '../../features/products/domain/repositories/category_repository.dart';
 import '../../features/products/domain/usecases/search_products_usecase.dart';
 import '../../features/products/presentation/bloc/product_detail/product_bloc.dart';
 import '../network/dio_client.dart';
@@ -60,6 +66,26 @@ Future<void> configureDependencies() async {
   getIt.registerFactory<ProductsBloc>(
         () => ProductsBloc(
           productsUsecase: getIt<ProductsUsecase>(), searchProductsUsecase: getIt<SearchProductsUsecase>(),
+    ),
+  );
+
+  // ---------- Category ----------]
+  getIt.registerSingleton<CategoryRemoteDataSource>(
+    CategoryRemoteDataSourceImpl(getIt<Dio>()),
+  );
+  getIt.registerSingleton<CategoryRepository>(
+    CategoryRepositoryImpl(remoteDataSource: getIt<CategoryRemoteDataSource>()),
+  );
+  getIt.registerSingleton<CategoriesUsecase>(
+    CategoriesUsecase(repository: getIt<CategoryRepository>()),
+  );
+  getIt.registerSingleton<ProductCategoryListUsecase>(
+    ProductCategoryListUsecase(repository: getIt<CategoryRepository>())
+  );
+  getIt.registerFactory<CategoryBloc>(
+        () => CategoryBloc(
+      categoriesUsecase: getIt<CategoriesUsecase>(),
+          productCategoryListUsecase: getIt<ProductCategoryListUsecase>()
     ),
   );
 }

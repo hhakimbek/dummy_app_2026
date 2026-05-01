@@ -23,7 +23,7 @@ class SearchProductsRequested extends ProductsEvent {
   const SearchProductsRequested({required this.query, this.order, this.sortBy});
 
   @override
-  List<Object> get props => [query];
+  List<Object> get props => [query,order??"",sortBy??""];
 }
 
 
@@ -34,5 +34,5 @@ class SortProductsRequested extends ProductsEvent {
   const SortProductsRequested({required this.query,this.order, this.sortBy});
 
   @override
-  List<Object> get props => [query];
+  List<Object> get props => [query,order??"",sortBy??""];
 }

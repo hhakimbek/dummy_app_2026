@@ -1,3 +1,4 @@
+import 'package:dummy_app_2026/features/products/presentation/bloc/category/category_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>(create: (_) => getIt<AuthBloc>()),
         BlocProvider<ProductBloc>(create: (_) => getIt<ProductBloc>()),
         BlocProvider<ProductsBloc>(create: (_) => getIt<ProductsBloc>()),
+        BlocProvider<CategoryBloc>(create: (_) => getIt<CategoryBloc>()),
         // BlocProvider<CartBloc>(create: (_) => getIt<CartBloc>()),
       ],
       child: MaterialApp.router(
